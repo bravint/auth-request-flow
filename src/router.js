@@ -13,18 +13,18 @@ const mockUser = {
     }
 };
 
+const secret = 'secret'
+
 router.post('/login', (req, res) => {
     const {username, password} = req.body
-    if (username !== mockUser.username || password !== mockUser.password) res.status(404).send(`incorrect credentials`)
+    if (username !== mockUser.username || password !== mockUser.password) res.status(401).send(`Incorrect credentials`)
     const payload = {username, password, iat: 1561358034}
-    const secret = 'secret'
     const token = jwt.sign(payload, secret)
     res.json(token)
 });
 
 router.get('/profile', (req, res) => {
     const token = (req.headers.authorization)
-    const secret = 'secret'
     try {
         jwt.verify(token, secret)
         res.json(mockUser.profile)
