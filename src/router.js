@@ -13,7 +13,7 @@ const mockUser = {
     },
 };
 
-const secret = 'secret';
+const secret = process.env.SECRET;
 
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
@@ -22,18 +22,14 @@ router.post('/login', (req, res) => {
         return res.status(401).json(`Incorrect credentials`);
     }
 
-    const payload = {
-        username,
-        password,
-    };
-
-    const token = jwt.sign(payload, secret);
+    const token = jwt.sign(username, secret);
 
     res.json(token);
 });
 
 router.get('/profile', (req, res) => {
     const token = req.headers.authorization;
+
     try {
         jwt.verify(token, secret);
         res.json(mockUser.profile);
